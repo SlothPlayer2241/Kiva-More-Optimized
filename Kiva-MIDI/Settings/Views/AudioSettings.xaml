@@ -16,8 +16,14 @@
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
         <Grid DockPanel.Dock="Top">
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#FF6B9D" Offset="0"/>
+                    <GradientStop Color="#FF9B5C" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
             <DockPanel HorizontalAlignment="Center">
-                <Label FontSize="16">
+                <Label FontSize="16" Foreground="White">
                     Rendering Engine:
                 </Label>
                 <Button Name="kdmapiEngine" FontSize="16" Width="120" Style="{DynamicResource TransparentButtonStyle}">
@@ -32,6 +38,12 @@
             </DockPanel>
         </Grid>
         <Grid>
+            <Grid.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#FF9B5C" Offset="0"/>
+                    <GradientStop Color="#FF6B9D" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
             <local:KDMAPIAudioSettings x:Name="kdmapiSettings"/>
             <local:WinMMAudioSettings x:Name="winmmSettings"/>
             <local:PreRenderAudioSettings x:Name="prerenderSettings"/>

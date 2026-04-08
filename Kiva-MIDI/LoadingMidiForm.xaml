@@ -17,7 +17,13 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{Binding ActualHeight,ElementName=content}"/>
     </WindowChrome.WindowChrome>
-    <Grid Name="content" Background="#0D47A1">
+    <Grid Name="content">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FF9B5C" Offset="0"/>
+                <GradientStop Color="#FF6B9D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid Name="loadProgessScreen"  Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="248*"/>

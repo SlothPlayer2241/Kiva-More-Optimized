@@ -15,6 +15,12 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FF9B5C" Offset="0"/>
+                <GradientStop Color="#FF6B9D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -23,7 +29,7 @@
             <StackPanel>
                 <StackPanel>
                     <DockPanel HorizontalAlignment="Left">
-                        <Label FontSize="14">Keyboard Key Range</Label>
+                        <Label FontSize="14" Foreground="White">Keyboard Key Range</Label>
                         <ui:InfoIcon Title="Key Range" Text="The visible key range. The keyboard maintains its aspect ratio when changing size."/>
                     </DockPanel>
                     <ui:BetterRadio RadioChecked="RangeChanged" x:Name="key88Range" Height="26" Text="88 Keys"/>
@@ -45,13 +51,13 @@
                     </DockPanel>
                 </StackPanel>
                 <StackPanel>
-                    <Label FontSize="14">Keyboard Style</Label>
+                    <Label FontSize="14" Foreground="White">Keyboard Style</Label>
                     <ui:BetterRadio RadioChecked="KBStyleChanged" x:Name="bigKeyboard" Height="26" Text="Big Keyboard"/>
                     <ui:BetterRadio RadioChecked="KBStyleChanged" x:Name="smallKeyboard" Height="26" Text="Small Keyboard"/>
                     <ui:BetterRadio RadioChecked="KBStyleChanged" x:Name="noKeyboard" Height="26" Text="No Keyboard"/>
                 </StackPanel>
                 <DockPanel>
-                    <Label FontSize="14" HorizontalAlignment="Left">
+                    <Label FontSize="14" HorizontalAlignment="Left" Foreground="White">
                         Lock FPS
                     </Label>
                     <ui:NumberSelect x:Name="fpsLock" ValueChanged="FpsLock_ValueChanged" Minimum="0" Maximum="10000" HorizontalAlignment="Left" Width="80" VerticalAlignment="Bottom" Margin="0,0,0,1"/>
@@ -64,7 +70,7 @@
             <DockPanel>
                 <Grid DockPanel.Dock="Top">
                     <DockPanel HorizontalAlignment="Left">
-                        <Label FontSize="14" HorizontalAlignment="Left">
+                        <Label FontSize="14" HorizontalAlignment="Left" Foreground="White">
                             Note Color Palette
                         </Label>
                         <ui:InfoIcon

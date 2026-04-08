@@ -18,6 +18,8 @@ namespace Kiva.MIDI
 
         public FastList<TempoEvent> Tempos = new FastList<TempoEvent>();
         public TempoEvent[] globaTempos;
+        public int TimeSignatureNumerator = 4;
+        public int TimeSignatureDenominator = 4;
 
         public long noteCount;
         int midiNoteEventCount = 0;
@@ -374,6 +376,8 @@ namespace Kiva.MIDI
                             byte dd = reader.Read();
                             byte cc = reader.Read();
                             byte bb = reader.Read();
+                            TimeSignatureNumerator = nn;
+                            TimeSignatureDenominator = (int)Math.Pow(2, dd);
                         }
                         else if (command == 0x59)
                         {

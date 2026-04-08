@@ -14,8 +14,14 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FF9B5C" Offset="0"/>
+                <GradientStop Color="#FF6B9D" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <DockPanel>
-            <Label DockPanel.Dock="Top">MIDI Output Device</Label>
+            <Label DockPanel.Dock="Top" Foreground="White">MIDI Output Device</Label>
             <Border BorderBrush="Black" BorderThickness="0">
                 <ScrollViewer>
                     <StackPanel Name="devicesList" Background="Transparent">

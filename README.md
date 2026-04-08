@@ -1,9 +1,9 @@
-<h1 align="center">Kiva</h1>
+<h1 align="center">Kivix</h1>
 
 <p align="center">
-    <img src="https://i.imgur.com/g0XBUMN.png" width="256" style=""/>
+    <img src="https://imgur.com/yIVq1jP.png" width="256" style=""/>
     <br />
-    <strong>Fast, Easy, Modern</strong>
+    <strong>Faster, leaner, smoother — we do it for you.</strong>
 </p>
 
 <p align="center">
@@ -16,27 +16,29 @@
 </p>
 
 ## Features
-- Extremely fast multithreaded rendering, best optimized for medium to high end systems.
-- Support for switching between KDMAPI and WinMM in the settings. do not kdmapi patch kiva.
-- Support for Zenith color palettes and midi color events
-- Epic transparent or semi transparent background if you want
-- 256 key support, as well as dynamic key range option (animating between 88 and 128 keys depending on the notes on screen)
-- 2 different keyboard designs, as well as option to disable keyboard
+- Blazing fast, debloated, and fully optimized for smooth performance on medium to high-end systems.
+- Supports switching between KDMAPI and WinMM in the settings. (Do **not** patch Kivix with KDMAPI.)
+- Supports Zenith color palettes and MIDI color events.
+- Transparent or semi-transparent background for a sleek look.
+- 256-key support, with dynamic key range option (animates between 88 and 128 keys depending on notes on screen).
+- Two different keyboard designs, plus option to hide the keyboard entirely.
 
 ## Installation
-You can download the latest version of Kiva for Windows 64-bit using the [installer](https://github.com/arduano/Kiva/releases/latest/download/KivaInstaller.exe). An internet connection is required.
-Kiva has **fully automatic updates**, downloading the update in the background and installing it automatically next time the program restarts.
-If you wish to opt out from auto updates, use the [portable version](https://github.com/arduano/Kiva/releases/latest/download/KivaPortable.zip).
+Download the latest version of Kivix for Windows 64-bit using the [installer](https://github.com/arduano/Kiva/releases/latest/download/KivaInstaller.exe). Internet connection required.  
 
-DirectX 11 is required for the program to run, which you can find [here](https://www.microsoft.com/en-us/download/details.aspx?id=17431).
+Kivix features **fully automatic updates**, installing in the background and applying updates on restart.  
+
+To opt out of auto updates, use the [portable version](https://github.com/arduano/Kiva/releases/latest/download/KivaPortable.zip).  
+
+DirectX 11 is required for the program to run, which can be found [here](https://www.microsoft.com/en-us/download/details.aspx?id=17431).
 
 ## Usage
-After downloading the app, install and run the program. Many settings have a question mark button next to them, that should help clear up the purpose of many confusing settings.
+Install and run the program. Many settings include a question mark button next to them to explain their purpose.
 
 ## License
-Kiva is licensed under the terms of the [Don't Be a Dick Public License](https://github.com/arduano/Kiva/blob/master/LICENSE).
+Kivix is licensed under the [Don't Be a Dick Public License](LICENSE).
 
 ## Screenshots
-<img src="https://i.imgur.com/YD0wHE1.png" width="512" />
-<img src="https://i.imgur.com/48GfALp.png" width="512" />
-<img src="https://i.imgur.com/QpgjYcv.png" width="512" />
+<img src="https://imgur.com/VTtKDbv.png" width="512" />
+<img src="https://imgur.com/56jrKjm.png" width="512" />
+<img src="https://imgur.com/aJ978su.png" width="512" />

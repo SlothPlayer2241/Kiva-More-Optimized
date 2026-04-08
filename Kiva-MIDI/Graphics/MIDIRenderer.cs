@@ -32,6 +32,10 @@ namespace Kiva.Graphics
             public float KeyboardHeight;
             public int ScreenWidth;
             public int ScreenHeight;
+            public int PPQ;
+            public float BPM;
+            public int TimeSignatureNumerator;
+            public int TimeSignatureDenominator;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 16)]
@@ -107,7 +111,13 @@ namespace Kiva.Graphics
         public long LastRenderedNoteCount { get; private set; } = 0;
         public long LastNPS => notesPassedPerFrame.Sum();
         public long LastPolyphony { get; private set; } = 0;
+        public long MaxPolyphony { get; private set; } = 0;
         public long NotesPassedSum { get; private set; } = 0;
+
+        public void ResetMaxPolyphony()
+        {
+            MaxPolyphony = 0;
+        }
 
         FastList<int> notesPassedPerFrame = new FastList<int>();
         FastList<double> notesPassedTimes = new FastList<double>();
@@ -229,7 +239,11 @@ namespace Kiva.Graphics
                 NoteBorder = 0.002f,
                 NoteLeft = -0.2f,
                 NoteRight = 0.0f,
-                ScreenAspect = 1f
+                ScreenAspect = 1f,
+                PPQ = 0,
+                BPM = 120f,
+                TimeSignatureNumerator = 4,
+                TimeSignatureDenominator = 4
             };
 
             noteBuffer = dispose.Add(new Buffer(device, new BufferDescription()
@@ -495,8 +509,15 @@ namespace Kiva.Graphics
                         {
                             if (black == 1) ids = blackKeysID;
                             else ids = whiteKeysID;
+                            
+                            int maxNotes = settings.General.MaxRenderedNotes;
+                            bool enableCulling = settings.General.EnableCulling;
+                            bool performanceMode = settings.General.PerformanceMode;
+                            
                             RenderLoop(ids, k =>
                             {
+                                if (maxNotes > 0 && notesRendered >= maxNotes) return;
+                                if (enableCulling && (k < firstNote || k >= lastNote)) return;
                                 long _notesRendered = 0;
                                 float left = (float)((x1array[k] - fullLeft) / fullWidth);
                                 float right = (float)((x1array[k] + wdtharray[k] - fullLeft) / fullWidth);
@@ -607,7 +628,7 @@ namespace Kiva.Graphics
                         if (notesHitSum < 0) notesHitSum = 0;
                         notesPassedPerFrame.Add(notesHitSum);
                         notesPassedTimes.Add(time);
-                        while (!notesPassedTimes.ZeroLen && notesPassedTimes.First < time - 1)
+                        while (!notesPassedTimes.ZeroLen && notesPassedTimes.First < time - Constants.TicksPerSecond)
                         {
                             notesPassedPerFrame.Pop();
                             notesPassedTimes.Pop();
@@ -622,6 +643,7 @@ namespace Kiva.Graphics
                         }
                         LastRenderedNoteCount = notesRendered;
                         LastPolyphony = polyphonySum;
+                        if (polyphonySum > MaxPolyphony) MaxPolyphony = polyphonySum;
                         NotesPassedSum = file.FirstUnhitNote.Select(s => s).Sum();
                         file.lastRenderTime = time;
                     }

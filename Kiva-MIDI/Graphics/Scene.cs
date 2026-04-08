@@ -47,6 +47,16 @@ namespace Kiva.Graphics
             get => render.LastPolyphony;
         }
 
+        public long MaxPolyphony
+        {
+            get => render.MaxPolyphony;
+        }
+
+        public void ResetMaxPolyphony()
+        {
+            render.ResetMaxPolyphony();
+        }
+
         public long LastNPS
         {
             get => render.LastNPS;

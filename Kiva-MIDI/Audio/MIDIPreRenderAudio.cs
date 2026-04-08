@@ -150,6 +150,10 @@ namespace Kiva.Audio
             lastReadtime = DateTime.UtcNow;
         }
 
+        public void SetBufferSize(int bufferSize)
+        {
+        }
+
         void BassWriteWrapped(BASSMIDI bass, int start, int count)
         {
             start = (start * 2) % AudioBuffer.Length;

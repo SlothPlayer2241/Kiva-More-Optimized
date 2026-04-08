@@ -87,7 +87,7 @@ namespace Kiva.MIDI
         protected List<uint> trackLengths = new List<uint>();
 
         protected MIDITrackParser[] parsers;
-        protected TempoEvent[] globalTempos;
+        public TempoEvent[] globalTempos;
 
         public event Action ParseFinished;
         public event Action ParseCancelled;
@@ -99,6 +99,9 @@ namespace Kiva.MIDI
         public int LastKey { get; protected set; } = 0;
         public double MidiLength { get; protected set; } = 0;
         public long MidiNoteCount { get; protected set; } = 0;
+        public bool RemoveOverlaps { get; protected set; } = false;
+        public int TimeSignatureNumerator { get; protected set; } = 4;
+        public int TimeSignatureDenominator { get; protected set; } = 4;
 
         public ParsingStage ParseStage { get; protected set; } = ParsingStage.Opening;
         public double ParseNumber { get; protected set; }
@@ -118,6 +121,7 @@ namespace Kiva.MIDI
         public MIDIFile(string path, MIDILoaderSettings settings, CancellationToken cancel)
         {
             LoaderSettings = settings;
+            RemoveOverlaps = settings.RemoveOverlaps;
             this.cancel = cancel;
             filepath = path;
         }
@@ -236,6 +240,11 @@ namespace Kiva.MIDI
             var temposMerge = TimedMerger<TempoEvent>.MergeMany(parsers.Select(p => p.Tempos).ToArray(), t => t.time);
             globalTempos = temposMerge.Cast<TempoEvent>().ToArray();
             MidiNoteCount = parsers.Select(p => p.noteCount).Sum();
+            if (parsers.Length > 0)
+            {
+                TimeSignatureNumerator = parsers[0].TimeSignatureNumerator;
+                TimeSignatureDenominator = parsers[0].TimeSignatureDenominator;
+            }
         }
 
         protected void SetColors()

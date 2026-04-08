@@ -36,13 +36,8 @@ namespace Kiva
     public enum CardParams
     {
         FPS = 1,
-        NoteCount = 2,
-        NPS = 4,
-        Polyphony = 8,
-        Time = 16,
-        RenderedNotes = 32,
-        AudioBuffer = 64,
-        FakeFps = 128
+        Time = 2,
+        RenderedNotes = 4
     }
 
     public class GeneralSettings : INotifyPropertyChanged
@@ -57,18 +52,20 @@ namespace Kiva
         public bool CompatibilityFPS { get; set; } = false;
         public bool SyncFPS { get; set; } = true;
 
-        public Color BackgroundColor { get; set; } = Color.FromArgb(255, 142, 142, 142);
-        public Color ForegroundColor { get; set; } = Color.FromArgb(255, 142, 142, 142);
-        public Color BarColor { get; set; } = Color.FromArgb(255, 0x00, 0x68, 0xC9);
+        public Color BackgroundColor { get; set; } = Color.FromArgb(255, 0xFF, 0x9B, 0x5C);
+        public Color ForegroundColor { get; set; } = Color.FromArgb(255, 0xFF, 0x6B, 0x9D);
+        public Color BarColor { get; set; } = Color.FromArgb(255, 0xFF, 0x6B, 0x9D);
 
         public string PaletteName { get; set; } = "Random.png";
         public bool PaletteRandomized { get; set; } = true;
 
         public bool HideInfoCard { get; set; } = false;
-        public CardParams InfoCardParams { get; set; } = CardParams.AudioBuffer | CardParams.FPS | CardParams.NoteCount | CardParams.NPS | CardParams.Polyphony | CardParams.RenderedNotes | CardParams.Time;
+        public CardParams InfoCardParams { get; set; } = CardParams.FPS | CardParams.Time | CardParams.RenderedNotes;
         public bool SkipLoadSettings { get; set; } = false;
 
         public bool MainWindowTopmost { get; set; } = false;
+
+        public bool DiscordRP { get; set; } = false;
 
         public AudioEngine SelectedAudioEngine { get; set; } = AudioEngine.PreRender;
 
@@ -77,8 +74,6 @@ namespace Kiva
         public bool RenderNoFx { get; set; } = false;
         public double RenderSimulateLag { get; set; } = 0;
 
-        public bool DiscordRP { get; set; } = false;
-
         public int SelectedMIDIDevice { get; set; } = -1;
         public string SelectedMIDIDeviceName { get; set; } = "";
 
@@ -86,6 +81,19 @@ namespace Kiva
         public int MaxRenderThreads { get; set; } = 0;
 
         public bool DisableTransparency { get; set; } = false;
+
+        public bool PerformanceMode { get; set; } = false;
+        public bool EnableVisualEffects { get; set; } = true;
+        public int MaxRenderedNotes { get; set; } = 0;
+        public int AudioBufferSize { get; set; } = 1024;
+        public bool EnableCulling { get; set; } = true;
+        public bool EnableNoteBatching { get; set; } = true;
+
+        public bool EnableAutoScaling { get; set; } = false;
+        public int AutoScalingMinFps { get; set; } = 30;
+        public bool EnableMidiCaching { get; set; } = false;
+        public bool LowQualityAudio { get; set; } = false;
+        public bool LazyLoadSoundfont { get; set; } = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

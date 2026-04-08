@@ -38,17 +38,16 @@ namespace Kiva
     /// Interaction logic for MainWindow.xaml
     /// </summary>E:\Programming\Personal\2019\Kiva\Kiva-MIDI\MainWindow.xaml
 
-    enum RPCStatus
-    {
-        Idle,
-        Loading,
-        Playing,
-        Ended,
-        Paused
-    }
-
     public partial class MainWindow : Window
     {
+        enum RPCStatus
+        {
+            Idle,
+            Loading,
+            Playing,
+            Ended,
+            Paused
+        }
 
         #region Chrome Window scary code
         private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -221,6 +220,70 @@ namespace Kiva
 
         RPCStatus rpStatus = RPCStatus.Idle;
 
+        void StartMIDIPlayer(bool kdmapi)
+        {
+            player = new MIDIEventPlayer(settings);
+            if (kdmapi)
+                player.DeviceID = -1;
+            else
+                player.DeviceID = settings.General.SelectedMIDIDevice;
+            player.RunPlayer();
+            player.Time = Time;
+            if (loadedFle != null) player.File = loadedFle;
+        }
+
+        void StartPreRenderPlayer()
+        {
+            preRenderPlayer = new MIDIPreRenderPlayer(settings);
+            preRenderPlayer.Time = Time;
+            if (loadedFle != null) preRenderPlayer.File = loadedFle;
+        }
+
+        void SwitchAudioEngine(AudioEngine engine)
+        {
+            if (engine == AudioEngine.KDMAPI)
+            {
+                if (selectedAudioEngine == AudioEngine.WinMM)
+                {
+                    player.DeviceID = -1;
+                }
+                else if (selectedAudioEngine == AudioEngine.PreRender)
+                {
+                    preRenderPlayer.Dispose();
+                    StartMIDIPlayer(true);
+                }
+            }
+            else if (engine == AudioEngine.WinMM)
+            {
+                if (selectedAudioEngine == AudioEngine.KDMAPI)
+                {
+                    player.DeviceID = settings.General.SelectedMIDIDevice;
+                }
+                else if (selectedAudioEngine == AudioEngine.PreRender)
+                {
+                    preRenderPlayer.Dispose();
+                    StartMIDIPlayer(false);
+                }
+            }
+            else if (engine == AudioEngine.PreRender)
+            {
+                if (selectedAudioEngine == AudioEngine.WinMM || selectedAudioEngine == AudioEngine.KDMAPI)
+                {
+                    player.Dispose();
+                    StartPreRenderPlayer();
+                }
+            }
+            selectedAudioEngine = engine;
+        }
+
+        void SetInfoPanelVisibility()
+        {
+            var cp = settings.General.InfoCardParams;
+            timePanel.Visibility = (cp & CardParams.Time) > 0 ? Visibility.Visible : Visibility.Collapsed;
+            fpsPanel.Visibility = (cp & CardParams.FPS) > 0 ? Visibility.Visible : Visibility.Collapsed;
+            renderedNotesPanel.Visibility = (cp & CardParams.RenderedNotes) > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         void SetDiscordRP(RPCStatus status, string filename = null)
         {
             try
@@ -284,75 +347,6 @@ namespace Kiva
                 }
             }
             catch { }
-        }
-
-        void StartMIDIPlayer(bool kdmapi)
-        {
-            player = new MIDIEventPlayer(settings);
-            if (kdmapi)
-                player.DeviceID = -1;
-            else
-                player.DeviceID = settings.General.SelectedMIDIDevice;
-            player.RunPlayer();
-            player.Time = Time;
-            if (loadedFle != null) player.File = loadedFle;
-        }
-
-        void StartPreRenderPlayer()
-        {
-            preRenderPlayer = new MIDIPreRenderPlayer(settings);
-            preRenderPlayer.Time = Time;
-            if (loadedFle != null) preRenderPlayer.File = loadedFle;
-        }
-
-        void SwitchAudioEngine(AudioEngine engine)
-        {
-            if (engine == AudioEngine.KDMAPI)
-            {
-                if (selectedAudioEngine == AudioEngine.WinMM)
-                {
-                    player.DeviceID = -1;
-                }
-                else if (selectedAudioEngine == AudioEngine.PreRender)
-                {
-                    preRenderPlayer.Dispose();
-                    StartMIDIPlayer(true);
-                }
-            }
-            else if (engine == AudioEngine.WinMM)
-            {
-                if (selectedAudioEngine == AudioEngine.KDMAPI)
-                {
-                    player.DeviceID = settings.General.SelectedMIDIDevice;
-                }
-                else if (selectedAudioEngine == AudioEngine.PreRender)
-                {
-                    preRenderPlayer.Dispose();
-                    StartMIDIPlayer(false);
-                }
-            }
-            else if (engine == AudioEngine.PreRender)
-            {
-                if (selectedAudioEngine == AudioEngine.WinMM || selectedAudioEngine == AudioEngine.KDMAPI)
-                {
-                    player.Dispose();
-                    StartPreRenderPlayer();
-                }
-            }
-            selectedAudioEngine = engine;
-        }
-
-        void SetInfoPanelVisibility()
-        {
-            var cp = settings.General.InfoCardParams;
-            timePanel.Visibility = (cp & CardParams.Time) > 0 ? Visibility.Visible : Visibility.Collapsed;
-            renderedNotesPanel.Visibility = (cp & CardParams.RenderedNotes) > 0 ? Visibility.Visible : Visibility.Collapsed;
-            polyphonyPanel.Visibility = (cp & CardParams.Polyphony) > 0 ? Visibility.Visible : Visibility.Collapsed;
-            npsPanel.Visibility = (cp & CardParams.NPS) > 0 ? Visibility.Visible : Visibility.Collapsed;
-            ncPanel.Visibility = (cp & CardParams.NoteCount) > 0 ? Visibility.Visible : Visibility.Collapsed;
-            fpsPanel.Visibility = (cp & CardParams.FPS) > 0 ? Visibility.Visible : Visibility.Collapsed;
-            fakeFpsPanel.Visibility = (cp & CardParams.FakeFps) > 0 ? Visibility.Visible : Visibility.Collapsed;
-            bufferLenPanel.Visibility = (cp & CardParams.AudioBuffer) > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public MainWindow(KivaSettings settings)
@@ -466,8 +460,9 @@ namespace Kiva
             infoCard.Visibility = settings.General.HideInfoCard ? Visibility.Hidden : Visibility.Visible;
             Topmost = settings.General.MainWindowTopmost;
             SetInfoPanelVisibility();
-
             SetDiscordRP(RPCStatus.Idle);
+
+            
 
             Func<TimeSpan, string> timeSpanString = (s) =>
             {
@@ -489,17 +484,50 @@ namespace Kiva
 
                 timeLabel.Text = timeSpanString(TimeSpan.FromSeconds(Math.Min(Time.GetTime(), timeSlider.Maximum))) + " / " + timeSpanString(TimeSpan.FromSeconds(midiLen));
                 fpsLabel.Text = d3d.FPS.ToString("#,##0.0");
-                fakeFpsLabel.Text = d3d.FakeFPS.ToString("#,##0.0");
-                ncLabel.Text = (loadedFle != null ? loadedFle.MidiNoteCount : 0).ToString("#,##0");
-                npLabel.Text = scene.NotesPassedSum.ToString("#,##0");
-                bufferLenLabel.Text = (selectedAudioEngine == AudioEngine.PreRender ? timeSpanString(TimeSpan.FromSeconds(preRenderPlayer.BufferSeconds)) : "N/A");
-                renderedNotesLabel.Text = scene.LastRenderedNoteCount.ToString("#,##0");
-                npsLabelLabel.Text = scene.LastNPS.ToString("#,##0");
-                polyphonyLabel.Text = scene.LastPolyphony.ToString("#,##0");
+                renderedNotesLabel.Text = scene.NotesPassedSum.ToString("#,##0");
+                polyphonyLabel.Text = scene.LastNPS.ToString("#,##0");
+                maxPolyphonyLabel.Text = scene.MaxPolyphony.ToString("#,##0");
+
+                if (loadedFle != null)
+                {
+                    ppqLabel.Text = loadedFle.division.ToString();
+                    var currentTime = Time.GetTimeInt();
+                    var bpm = 120.0;
+                    if (loadedFle.globalTempos != null && loadedFle.globalTempos.Length > 0)
+                    {
+                        for (int i = loadedFle.globalTempos.Length - 1; i >= 0; i--)
+                        {
+                            if (loadedFle.globalTempos[i].time <= currentTime)
+                            {
+                                bpm = 60000000.0 / loadedFle.globalTempos[i].tempo;
+                                break;
+                            }
+                        }
+                    }
+                    bpmLabel.Text = bpm.ToString("#,##0.0");
+                    totalNotesLabel.Text = loadedFle.MidiNoteCount.ToString("#,##0");
+                    orEnabledLabel.Visibility = loadedFle.RemoveOverlaps ? Visibility.Visible : Visibility.Hidden;
+                }
+
+                if (settings.General.EnableAutoScaling)
+                {
+                    var currentFps = d3d.FPS;
+                    var minFps = settings.General.AutoScalingMinFps;
+                    if (currentFps > 0 && currentFps < minFps)
+                    {
+                        if (!settings.General.PerformanceMode)
+                        {
+                            settings.General.PerformanceMode = true;
+                            settings.General.EnableVisualEffects = false;
+                            settings.General.EnableCulling = true;
+                            settings.General.EnableNoteBatching = true;
+                        }
+                    }
+                }
 
                 if (Time.GetTime() > midiLen && !Time.Paused && loadedFle != null)
                 {
-                    if (rpStatus != RPCStatus.Ended) SetDiscordRP(RPCStatus.Ended, loadedFle.filepath);
+                    SetDiscordRP(RPCStatus.Ended, loadedFle.filepath);
                 }
 
                 double eventSkip;
@@ -515,7 +543,11 @@ namespace Kiva
                 else audioDesyncLabel.Visibility = Visibility.Hidden;
 
                 timeSlider.Value = Time.GetTime();
-                rotateLogo.Angle = timeSlider.Value * 4;
+                
+                if (loadedFle != null && !Time.Paused && Time.GetTime() > 0)
+                {
+                    rotateLogo.Angle = (rotateLogo.Angle + 3) % 360;
+                }
 
                 if (Program.UpdateDownloading) downloadingUpdateLabel.Visibility = Visibility.Visible;
                 else downloadingUpdateLabel.Visibility = Visibility.Collapsed;
@@ -556,6 +588,7 @@ namespace Kiva
                     player.File = file;
                 Time.Navigate(-1);
                 scene.File = file;
+                scene.ResetMaxPolyphony();
                 loadedFle = file;
                 timeSlider.Minimum = -1;
                 timeSlider.Maximum = file.MidiLength;
@@ -563,7 +596,7 @@ namespace Kiva
                 loadingForm.Dispose();
                 loadingForm = null;
                 GC.Collect(2, GCCollectionMode.Forced);
-                SetDiscordRP(RPCStatus.Playing, loadedFle.filepath);
+                SetDiscordRP(RPCStatus.Playing, filename);
                 Time.Play();
                 Topmost = settings.General.MainWindowTopmost;
             };
@@ -573,9 +606,7 @@ namespace Kiva
                 loadingForm.Dispose();
                 GC.Collect(2, GCCollectionMode.Forced);
                 loadingForm = null;
-                SetDiscordRP(RPCStatus.Idle);
             };
-            SetDiscordRP(RPCStatus.Loading, filename);
             loadingForm.ShowDialog();
         }
 
@@ -651,6 +682,7 @@ namespace Kiva
             {
                 pauseButton.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
                 playButton.Background = new SolidColorBrush(Color.FromArgb(100, 255, 255, 255));
+                SetDiscordRP(RPCStatus.Playing, loadedFle == null ? null : loadedFle.filepath);
 
                 if (settings.Soundfonts.Soundfonts.Length == 0)
                 {
@@ -669,7 +701,6 @@ namespace Kiva
                 }
                 catch { }
 
-                SetDiscordRP(RPCStatus.Playing, loadedFle == null ? null : loadedFle.filepath);
             }
         }
 

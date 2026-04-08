@@ -217,6 +217,11 @@ namespace Kiva.Audio
                 ma.simulatedLagScale = settings.General.RenderSimulateLag;
                 StartRender(true);
             }
+            if (e.PropertyName == "AudioBufferSize")
+            {
+                ma.SetBufferSize(settings.General.AudioBufferSize);
+                StartRender(true);
+            }
         }
 
         int GetEventPos(MIDIEvent[] events, double time)

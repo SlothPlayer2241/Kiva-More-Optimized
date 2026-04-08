@@ -23,7 +23,13 @@
     </WindowChrome.WindowChrome>
     <Grid>
         <DockPanel LastChildFill="True">
-            <Border Panel.ZIndex="1" Visibility="{Binding ChromeVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Background="#0068c9" DockPanel.Dock="Top" Height="40" x:Name="titlebar">
+            <Border Panel.ZIndex="1" Visibility="{Binding ChromeVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" DockPanel.Dock="Top" Height="40" x:Name="titlebar">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#FF6B9D" Offset="0"/>
+                        <GradientStop Color="#FF9B5C" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="5" ShadowDepth="0"/>
                 </Border.Effect>
@@ -47,7 +53,13 @@
                     </DockPanel>
                 </Grid>
             </Border>
-            <Grid Name="content" Background="#0179db">
+            <Grid Name="content">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#FF9B5C" Offset="0"/>
+                        <GradientStop Color="#FF6B9D" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
                 <local:VisualSettings x:Name="visualSettings"/>
                 <local:AudioSettings x:Name="audioSettings"/>
                 <local:MiscSettings x:Name="miscSettings"/>

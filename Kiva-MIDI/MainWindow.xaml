@@ -21,14 +21,27 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ButtonTemplates.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <FontFamily x:Key="TitleFont">assets/Pacifico-Regular.ttf#Pacifico</FontFamily>
         </ResourceDictionary>
     </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="{Binding ActualHeight,ElementName=titlebar}"/>
     </WindowChrome.WindowChrome>
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FF6B9D" Offset="0"/>
+                <GradientStop Color="#FF9B5C" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
         <DockPanel LastChildFill="True">
-            <Border Visibility="{Binding ChromeVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Background="#0068c9" DockPanel.Dock="Top" Height="69" x:Name="titlebar">
+            <Border Visibility="{Binding ChromeVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" DockPanel.Dock="Top" Height="69" x:Name="titlebar">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#FF6B9D" Offset="0"/>
+                        <GradientStop Color="#FF9B5C" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -53,17 +66,17 @@
                             <Image HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" Height="Auto" Margin="8" Source="UI/settings.png"/>
                         </Button>
                         <DockPanel Margin="5,0" WindowChrome.IsHitTestVisibleInChrome="True">
-                            <Label FontSize="16" VerticalAlignment="Center" Padding="5,0,5,3" Margin="0,0,5,0">Speed:</Label>
+                            <Label FontSize="16" VerticalAlignment="Center" Padding="5,0,5,3" Margin="0,0,5,0" Foreground="White">Speed:</Label>
                             <ui:ValueSlider ValueChanged="SpeedSlider_ValueChanged" x:Name="speedSlider" Width="220" Minimum="-3" Maximum="3" TrueMin="0.01" TrueMax="100" DecimalPoints="2" VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True"/>
                         </DockPanel>
                         <ui:InfoIcon Title="Speed" Text="The relative time scale. Higher values mean faster playback."/>
                         <DockPanel Margin="5,0" WindowChrome.IsHitTestVisibleInChrome="True">
-                            <Label FontSize="16" VerticalAlignment="Center" Padding="5,0,5,3" Margin="0,0,5,0">Size:</Label>
+                            <Label FontSize="16" VerticalAlignment="Center" Padding="5,0,5,3" Margin="0,0,5,0" Foreground="White">Size:</Label>
                             <ui:ValueSlider ValueChanged="SizeSlider_ValueChanged" x:Name="sizeSlider" Width="220" Minimum="-4" Maximum="3" TrueMin="0.01" TrueMax="1000" DecimalPoints="2" VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True"/>
                         </DockPanel>
                         <ui:InfoIcon Title="Height Scale" Text="The 'Size' of the notes. The smaller the size, the faster they fall."/>
                         <Grid>
-                            <Label Name="downloadingUpdateLabel" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0">Downloading update...</Label>
+                            <Label Name="downloadingUpdateLabel" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="White">Downloading update...</Label>
                             <Button Name="updateInstalledButton" PreviewMouseDown="updateInstalledButton_PreviewMouseDown" FontSize="16" VerticalAlignment="Center" Margin="10,0,0,0" WindowChrome.IsHitTestVisibleInChrome="True" Style="{StaticResource TransparentButtonStyle}" Height="25">Update installed! Click here to restart Kiva</Button>
                         </Grid>
                     </DockPanel>
@@ -81,18 +94,18 @@
                 </Grid>
                 <Grid Name="infoCard" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="100">
                     <Grid.Background>
-                        <SolidColorBrush Color="Black" Opacity=".5"/>
+                        <SolidColorBrush Color="Black" Opacity="0.2"/>
                     </Grid.Background>
                     <StackPanel>
                         <DockPanel Background="Transparent" Cursor="Hand">
-                            <Image Source="logo.png" RenderOptions.BitmapScalingMode="HighQuality" Width="30" Height="30" Margin="3" RenderTransformOrigin="0.5,0.5">
+                            <Image x:Name="logoImage" Source="logo.png" RenderOptions.BitmapScalingMode="HighQuality" Width="30" Height="30" Margin="3" RenderTransformOrigin="0.5,0.5">
                                 <Image.RenderTransform>
                                     <RotateTransform x:Name="rotateLogo" Angle="0"/>
                                 </Image.RenderTransform>
                             </Image>
-                            <Image Source="kiva.png" RenderOptions.BitmapScalingMode="HighQuality" Width="70" Height="30" Margin="3"/>
-                            <Label Name="versionLabel" Foreground="White" VerticalAlignment="Bottom" FontSize="16" Padding="2" Margin="0,0,5,0">
-                                v1.0
+                            <TextBlock Text="Kivix" Foreground="White" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Margin="5,0,0,0" FontFamily="{StaticResource TitleFont}"/>
+                            <Label Name="versionLabel" Foreground="White" VerticalAlignment="Bottom" FontSize="12" Padding="2" Margin="0,0,5,0">
+                                v2.1
                             </Label>
                         </DockPanel>
                         <Border Padding="5">
@@ -110,36 +123,31 @@
                                     <TextBlock Margin="0,0,4,0">FPS:</TextBlock>
                                     <TextBlock Name="fpsLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
                                 </DockPanel>
-                                <DockPanel Name="fakeFpsPanel">
-                                    <TextBlock Margin="0,0,4,0">Estimated FPS:</TextBlock>
-                                    <TextBlock Name="fakeFpsLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
-                                </DockPanel>
                                 <DockPanel Name="renderedNotesPanel">
-                                    <TextBlock Margin="0,0,4,0">Rendered Notes:</TextBlock>
+                                    <TextBlock Margin="0,0,4,0">Notes:</TextBlock>
                                     <TextBlock Name="renderedNotesLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
                                 </DockPanel>
-                                <DockPanel Name="npsPanel">
-                                    <TextBlock Margin="0,0,4,0">NPS:</TextBlock>
-                                    <TextBlock Name="npsLabelLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
+                                <DockPanel Name="totalNotesPanel">
+                                    <TextBlock Margin="0,0,4,0">Total:</TextBlock>
+                                    <TextBlock Name="totalNotesLabel" DockPanel.Dock="Right" HorizontalAlignment="Right">0</TextBlock>
                                 </DockPanel>
                                 <DockPanel Name="polyphonyPanel">
-                                    <TextBlock Margin="0,0,4,0">Polyphony:</TextBlock>
+                                    <TextBlock Margin="0,0,4,0">NPS:</TextBlock>
                                     <TextBlock Name="polyphonyLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
                                 </DockPanel>
-                                <StackPanel Name="ncPanel">
-                                    <DockPanel>
-                                        <TextBlock Margin="0,0,4,0">NC:</TextBlock>
-                                        <TextBlock Name="ncLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
-                                    </DockPanel>
-                                    <DockPanel>
-                                        <TextBlock Margin="0,0,4,0">Passed:</TextBlock>
-                                        <TextBlock Name="npLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
-                                    </DockPanel>
-                                </StackPanel>
-                                <DockPanel Name="bufferLenPanel">
-                                    <TextBlock Margin="0,0,4,0">Audio Buffer:</TextBlock>
-                                    <TextBlock Name="bufferLenLabel" DockPanel.Dock="Right" HorizontalAlignment="Right"></TextBlock>
+                                <DockPanel Name="maxPolyphonyPanel">
+                                    <TextBlock Margin="0,0,4,0">Max Poly:</TextBlock>
+                                    <TextBlock Name="maxPolyphonyLabel" DockPanel.Dock="Right" HorizontalAlignment="Right">0</TextBlock>
                                 </DockPanel>
+                                <DockPanel Name="bpmPanel">
+                                    <TextBlock Margin="0,0,4,0">BPM:</TextBlock>
+                                    <TextBlock Name="bpmLabel" DockPanel.Dock="Right" HorizontalAlignment="Right">0</TextBlock>
+                                </DockPanel>
+                                <DockPanel Name="ppqPanel">
+                                    <TextBlock Margin="0,0,4,0">PPQ:</TextBlock>
+                                    <TextBlock Name="ppqLabel" DockPanel.Dock="Right" HorizontalAlignment="Right">0</TextBlock>
+                                </DockPanel>
+                                <TextBlock Name="orEnabledLabel" Text="OR Enabled!" Foreground="#FF00FF" FontWeight="Bold" Margin="0,2,0,0" Visibility="Hidden"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>

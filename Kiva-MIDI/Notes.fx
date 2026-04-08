@@ -6,6 +6,10 @@ float ScreenAspect;
 float KeyboardHeight;
 int ScreenWidth;
 int ScreenHeight;
+int PPQ;
+float BPM;
+int TimeSignatureNumerator;
+int TimeSignatureDenominator;
 
 struct NOTE
 {
@@ -103,27 +107,28 @@ void GS_Note(point NOTE input[1], inout TriangleStream<PS_IN> OutputStream)
   float borderLeft = NoteLeft + noteBorderh;
   float borderRight = NoteRight - noteBorderh;
 
-  v.col = cl;
+  float4 grey = float4(0.3, 0.3, 0.3, 1);
+  v.col = grey;
   v.pos = float4(borderLeft, borderBottom, 0, 1);
   v.pos.xy = v.pos.xy * 2 - 1;
   OutputStream.Append(v);
   v.pos = float4(borderLeft, borderTop, 0, 1);
   v.pos.xy = v.pos.xy * 2 - 1;
   OutputStream.Append(v);
-  v.col = cr;
+  v.col = grey;
   v.pos = float4(borderRight, borderTop, 0, 1);
   v.pos.xy = v.pos.xy * 2 - 1;
   OutputStream.Append(v);
   OutputStream.RestartStrip();
 
-  v.col = cr;
+  v.col = grey;
   v.pos = float4(borderRight, borderTop, 0, 1);
   v.pos.xy = v.pos.xy * 2 - 1;
   OutputStream.Append(v);
   v.pos = float4(borderRight, borderBottom, 0, 1);
   v.pos.xy = v.pos.xy * 2 - 1;
   OutputStream.Append(v);
-  v.col = cl;
+  v.col = grey;
   v.pos = float4(borderLeft, borderBottom, 0, 1);
   v.pos.xy = v.pos.xy * 2 - 1;
   OutputStream.Append(v);
@@ -133,4 +138,60 @@ void GS_Note(point NOTE input[1], inout TriangleStream<PS_IN> OutputStream)
 float4 PS(PS_IN input) : SV_Target
 {
   return input.col;
+}
+
+struct GRID_IN
+{
+  float4 pos : SV_POSITION;
+  float4 col : COLOR;
+};
+
+[maxvertexcount(6)]
+void GS_HorizontalGrid(point float4 input[1], inout TriangleStream<GRID_IN> OutputStream)
+{
+  GRID_IN v = (GRID_IN)0;
+  float4 lineColor = float4(0.2, 0.2, 0.2, 0.5);
+  
+  float beatWidth = 60.0 / BPM;
+  float barWidth = beatWidth * TimeSignatureNumerator;
+  float4 color = float4(0.3, 0.3, 0.3, 0.3);
+  
+  for(float y = KeyboardHeight; y < 1.0; y += (1.0 - KeyboardHeight) / 88.0)
+  {
+    v.col = float4(0.15, 0.15, 0.15, 0.5);
+    v.pos = float4(0, y, 0, 1);
+    v.pos.xy = v.pos.xy * 2 - 1;
+    OutputStream.Append(v);
+    v.pos = float4(1, y, 0, 1);
+    v.pos.xy = v.pos.xy * 2 - 1;
+    OutputStream.Append(v);
+    OutputStream.RestartStrip();
+  }
+}
+
+[maxvertexcount(6)]
+void GS_VerticalGrid(point float4 input[1], inout TriangleStream<GRID_IN> OutputStream)
+{
+  GRID_IN v = (GRID_IN)0;
+  float beatWidth = 60.0 / BPM;
+  float pixelsPerSecond = 100.0;
+  float beatPixelWidth = beatWidth * pixelsPerSecond;
+  float barWidth = beatPixelWidth * TimeSignatureNumerator;
+  
+  float time = input[0].x;
+  float startTime = floor(time / barWidth) * barWidth;
+  
+  for(int i = 0; i < 5; i++)
+  {
+    float x = startTime + i * barWidth;
+    if(x > 1.0) break;
+    v.col = float4(0.2, 0.2, 0.2, 0.4);
+    v.pos = float4(x, KeyboardHeight, 0, 1);
+    v.pos.xy = v.pos.xy * 2 - 1;
+    OutputStream.Append(v);
+    v.pos = float4(x, 1, 0, 1);
+    v.pos.xy = v.pos.xy * 2 - 1;
+    OutputStream.Append(v);
+    OutputStream.RestartStrip();
+  }
 }
