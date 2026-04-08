@@ -3,7 +3,7 @@
 <p align="center">
     <img src="https://imgur.com/yIVq1jP.png" width="256" style=""/>
     <br />
-    <strong>Faster, leaner, smoother — we do it for you.</strong>
+    <strong>Faster, leaner, smoother | we do it for you.</strong>
 </p>
 
 <p align="center">
