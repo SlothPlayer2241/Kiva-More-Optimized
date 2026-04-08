@@ -17,5 +17,6 @@ del /S Kiva-MIDI\bin\x64\Release\lib\*.xml
 del /S Kiva-MIDI\bin\x64\Release\lib\*.pdb
 
 powershell -c Compress-Archive -Path Kiva-MIDI\bin\x64\Release\* -CompressionLevel Optimal -Force -DestinationPath build\KivaPortable.zip
+if (-Not (Test-Path "C:\Users\Noobie\Documents\Kivix\build\KivaPortable")) { Expand-Archive "C:\Users\Noobie\Documents\Kivix\build\KivaPortable.zip" "C:\Users\Noobie\Documents\Kivix\build\KivaPortable" } else { Write-Host "Folder already exists. Extraction stopped." }
 
 pause
