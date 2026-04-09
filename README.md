@@ -22,19 +22,15 @@
 - Two different keyboard designs, plus option to hide the keyboard entirely.
 
 ## Installation
-Download the latest version of Kivix for Windows 64-bit using the [installer](https://github.com/arduano/Kiva/releases/latest/download/KivaInstaller.exe). Internet connection required.  
-
-Kivix features **fully automatic updates**, installing in the background and applying updates on restart.  
-
-To opt out of auto updates, use the [portable version](https://github.com/arduano/Kiva/releases/latest/download/KivaPortable.zip).  
+The Kivix Installer is not entirely ready to be published yet, use the [portable version](https://github.com/arduano/Kiva/releases/latest/download/KivaPortable.zip) instead.  
 
 DirectX 11 is required for the program to run, which can be found [here](https://www.microsoft.com/en-us/download/details.aspx?id=17431).
 
 ## Usage
-Install and run the program. Many settings include a question mark button next to them to explain their purpose.
+Just run the program. Many settings include a question mark button next to them to explain their purpose.
 
 ## License
-Kivix is licensed under the [Don't Be a Dick Public License](LICENSE).
+Kivix is licensed under the [Public License](LICENSE).
 
 ## Screenshots
 <img src="https://imgur.com/VTtKDbv.png" width="512" />
