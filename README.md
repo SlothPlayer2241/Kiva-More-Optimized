@@ -7,12 +7,10 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/arduano/Kiva/releases/"><img src="https://img.shields.io/github/release/arduano/Kiva.svg?style=flat-square" alt="GitHub release"></a>
-    <a href="https://github.com/arduano/Kiva/releases/"><img src="https://img.shields.io/github/downloads/arduano/Kiva/total.svg?style=flat-square" alt="GitHub release"></a>
-    <a href="https://github.com/arduano/Kiva/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-DBAD-blue.svg?style=flat-square" alt="DBAD license"></a>
-    <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></a>
-    <a href="https://discord.gg/Aj4cb5"><img src="https://img.shields.io/discord/549344616210628609.svg?style=flat-square" alt="Discord"></a>
-    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M9XRCSPYSMBCA&source=url"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square" alt="Donate"></a>
+    <a href="https://github.com/SlothPlayer2241/Kiva-More-Optimized/releases"><img src="https://img.shields.io/badge/Kivix-v2.1_beta.1-orange?labelColor=grey"></a>
+    <a href="https://github.com/SlothPlayer2241/Kiva-More-Optimized/releases"><img src="https://img.shields.io/badge/Downloads-No_downloads_yet-red?labelColor=grey"></a>
+    <a href="https://github.com/SlothPlayer2241/Kiva-More-Optimized/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-READ-black?labelColor=white"></a>
+    <a href="https://discord.gg/Vk4kkHMH"><img src="https://img.shields.io/badge/Discord-Join_our_Discord!-blue?"></a>
 </p>
 
 ## Features
