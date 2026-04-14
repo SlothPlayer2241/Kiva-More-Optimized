@@ -1,91 +1,148 @@
-﻿<UserControl x:Class="Kiva.Settings.Views.AdvancedSettings"
+<UserControl x:Class="Kiva.Settings.Views.AdvancedSettings"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Kiva.Settings.Views" xmlns:ui="clr-namespace:Kiva.UI"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:ui="clr-namespace:Kiva.UI">
+
+    <UserControl.Resources>
+        <!-- Global text style -->
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="#FF9B5C" Offset="0"/>
+                <GradientStop Color="#FF9B5C"/>
                 <GradientStop Color="#FF6B9D" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+
+        <!-- LEFT SIDE -->
         <StackPanel Margin="10">
-            <Label FontSize="16" Foreground="White" Margin="0,0,0,10">Performance Settings</Label>
+
+            <Label FontSize="16" Margin="0,0,0,10">Performance Settings</Label>
+
             <DockPanel>
-                <Label FontSize="14" Foreground="White">Max Render Threads</Label>
-                <ui:NumberSelect x:Name="threadCount" Minimum="1" Value="1" Maximum="16" Margin="5,0" Width="70" HorizontalAlignment="Left" ValueChanged="threadCount_ValueChanged"/>
+                <Label>Max Render Threads</Label>
+                <ui:NumberSelect x:Name="threadCount"
+                                 Minimum="1"
+                                 Maximum="16"
+                                 Width="70"
+                                 Margin="5,0"
+                                 ValueChanged="threadCount_ValueChanged"/>
             </DockPanel>
+
             <DockPanel Margin="0,5,0,0">
-                <ui:BetterCheckbox x:Name="forceSingleThread" Text="Force single thread" CheckToggled="forceSingleThread_CheckToggled"/>
-                <ui:InfoIcon Title="Single Threaded" Text="Forces the renderer to use only 1 thread. Note audio will still be rendered in different threads." HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="forceSingleThread"
+                                   Text="Force single thread"
+                                   CheckToggled="forceSingleThread_CheckToggled"/>
+                <ui:InfoIcon Title="Single Threaded"
+                             Text="Forces the renderer to use only 1 thread."
+                             Margin="5,0,0,0"/>
             </DockPanel>
+
             <DockPanel Margin="0,10,0,0">
-                <Label FontSize="14" Foreground="White">Audio Buffer Size (samples)</Label>
-                <ui:NumberSelect x:Name="audioBufferSize" Minimum="256" Maximum="8192" Value="1024" Margin="5,0" Width="80" HorizontalAlignment="Left" ValueChanged="audioBufferSize_ValueChanged"/>
-                <ui:InfoIcon Title="Audio Buffer Size" Text="Lower values = lower latency but higher CPU usage. Recommended: 1024 for general use, 512 or 256 for low latency." Margin="5,0,0,0"/>
+                <Label>Audio Buffer Size (samples)</Label>
+                <ui:NumberSelect x:Name="audioBufferSize"
+                                 Minimum="256"
+                                 Maximum="8192"
+                                 Width="80"
+                                 Margin="5,0"
+                                 ValueChanged="audioBufferSize_ValueChanged"/>
             </DockPanel>
+
             <DockPanel Margin="0,10,0,0">
-                <Label FontSize="14" Foreground="White">Max Rendered Notes</Label>
-                <ui:NumberSelect x:Name="maxRenderedNotes" Minimum="0" Maximum="100000" Value="0" Margin="5,0" Width="80" HorizontalAlignment="Left" ValueChanged="maxRenderedNotes_ValueChanged"/>
-                <ui:InfoIcon Title="Max Rendered Notes" Text="0 = unlimited. Limits the maximum number of notes rendered per frame for performance." Margin="5,0,0,0"/>
+                <Label>Max Rendered Notes</Label>
+                <ui:NumberSelect x:Name="maxRenderedNotes"
+                                 Minimum="0"
+                                 Maximum="100000"
+                                 Width="80"
+                                 Margin="5,0"
+                                 ValueChanged="maxRenderedNotes_ValueChanged"/>
             </DockPanel>
+
             <DockPanel Margin="0,10,0,0">
-                <ui:BetterCheckbox x:Name="performanceMode" Text="Performance Mode" CheckToggled="performanceMode_CheckToggled"/>
-                <ui:InfoIcon Title="Performance Mode" Text="Disables visual effects and optimizes rendering for maximum FPS. Good for large MIDI files." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="performanceMode"
+                                   Text="Performance Mode"
+                                   CheckToggled="performanceMode_CheckToggled"/>
             </DockPanel>
+
             <DockPanel Margin="0,5,0,0">
-                <ui:BetterCheckbox x:Name="enableVisualEffects" Text="Enable Visual Effects" CheckToggled="enableVisualEffects_CheckToggled"/>
-                <ui:InfoIcon Title="Visual Effects" Text="Enables gradient notes and animations. Disable for better performance." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="enableVisualEffects"
+                                   Text="Enable Visual Effects"
+                                   CheckToggled="enableVisualEffects_CheckToggled"/>
             </DockPanel>
+
         </StackPanel>
+
+        <!-- RIGHT SIDE -->
         <StackPanel Margin="10" Grid.Column="1">
-            <Label FontSize="16" Foreground="White" Margin="0,0,0,10">Optimization</Label>
+
+            <Label FontSize="16" Margin="0,0,0,10">Optimization</Label>
+
             <DockPanel>
-                <ui:BetterCheckbox x:Name="enableCulling" Text="Enable Note Culling" CheckToggled="enableCulling_CheckToggled"/>
-                <ui:InfoIcon Title="Note Culling" Text="Skips rendering notes that are outside the visible screen area. Significantly improves performance." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="enableCulling"
+                                   Text="Enable Note Culling"
+                                   CheckToggled="enableCulling_CheckToggled"/>
             </DockPanel>
+
             <DockPanel Margin="0,5,0,0">
-                <ui:BetterCheckbox x:Name="enableBatching" Text="Enable Note Batching" CheckToggled="enableBatching_CheckToggled"/>
-                <ui:InfoIcon Title="Note Batching" Text="Groups similar notes together for faster rendering. Improves performance with many notes." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="enableBatching"
+                                   Text="Enable Note Batching"
+                                   CheckToggled="enableBatching_CheckToggled"/>
             </DockPanel>
+
             <DockPanel Margin="0,10,0,0">
-                <ui:BetterCheckbox x:Name="enableAutoScaling" Text="Auto Quality Scaling" CheckToggled="enableAutoScaling_CheckToggled"/>
-                <ui:InfoIcon Title="Auto Scaling" Text="Automatically reduces visual quality when FPS drops below threshold." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="enableAutoScaling"
+                                   Text="Auto Quality Scaling"
+                                   CheckToggled="enableAutoScaling_CheckToggled"/>
             </DockPanel>
+
             <DockPanel Margin="0,5,0,0">
-                <Label FontSize="14" Foreground="White">Min FPS Threshold</Label>
-                <ui:NumberSelect x:Name="autoScalingMinFps" Minimum="10" Maximum="60" Value="30" Margin="5,0" Width="60" HorizontalAlignment="Left" ValueChanged="autoScalingMinFps_ValueChanged"/>
+                <Label>Min FPS Threshold</Label>
+                <ui:NumberSelect x:Name="autoScalingMinFps"
+                                 Minimum="10"
+                                 Maximum="60"
+                                 Width="60"
+                                 Margin="5,0"
+                                 ValueChanged="autoScalingMinFps_ValueChanged"/>
             </DockPanel>
+
             <DockPanel Margin="0,10,0,0">
-                <ui:BetterCheckbox x:Name="enableMidiCaching" Text="MIDI File Caching" CheckToggled="enableMidiCaching_CheckToggled"/>
-                <ui:InfoIcon Title="MIDI Caching" Text="Cache parsed MIDI files for faster reloads. Uses more disk space." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="enableMidiCaching"
+                                   Text="MIDI File Caching"
+                                   CheckToggled="enableMidiCaching_CheckToggled"/>
             </DockPanel>
+
             <DockPanel Margin="0,5,0,0">
-                <ui:BetterCheckbox x:Name="lowQualityAudio" Text="Low Quality Audio Mode" CheckToggled="lowQualityAudio_CheckToggled"/>
-                <ui:InfoIcon Title="Low Quality Audio" Text="Reduces audio quality for lower CPU usage." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="lowQualityAudio"
+                                   Text="Low Quality Audio Mode"
+                                   CheckToggled="lowQualityAudio_CheckToggled"/>
             </DockPanel>
+
             <DockPanel Margin="0,5,0,0">
-                <ui:BetterCheckbox x:Name="lazyLoadSoundfont" Text="Lazy Soundfont Loading" CheckToggled="lazyLoadSoundfont_CheckToggled"/>
-                <ui:InfoIcon Title="Lazy Loading" Text="Load soundfont after UI is ready for faster startup." Margin="5,0,0,0"/>
+                <ui:BetterCheckbox x:Name="lazyLoadSoundfont"
+                                   Text="Lazy Soundfont Loading"
+                                   CheckToggled="lazyLoadSoundfont_CheckToggled"/>
             </DockPanel>
-            <DockPanel HorizontalAlignment="Left" Margin="0,20,0,0">
-                <Label FontSize="14" Foreground="White">
-                    Require Kiva Restart
-                </Label>
-                <ui:InfoIcon Title="Require Kiva Restart" Text="Settings that require kiva to be restarted for them to take effect"/>
+
+            <DockPanel Margin="0,20,0,0">
+                <Label>Require Kiva Restart</Label>
             </DockPanel>
-            <DockPanel HorizontalAlignment="Left" Margin="0,5,0,0">
-                <ui:BetterCheckbox x:Name="disableTransparency" CheckToggled="disableTransparency_CheckToggled" Text="Disable window transparency"/>
-                <ui:InfoIcon Title="Disable transparency (compatibility)" Text="Sometimes programs like OBS have trouble recording the Kiva window. This setting can help fix that." Margin="5,1,0,0"/>
+
+            <DockPanel Margin="0,5,0,0">
+                <ui:BetterCheckbox x:Name="disableTransparency"
+                                   Text="Disable window transparency"
+                                   CheckToggled="disableTransparency_CheckToggled"/>
             </DockPanel>
+
         </StackPanel>
+
     </Grid>
 </UserControl>
