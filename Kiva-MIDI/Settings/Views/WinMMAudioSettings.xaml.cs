@@ -1,122 +1,122 @@
-﻿using Kiva.Audio.APIs;
+using Kiva.Audio.APIs;
 using Kiva.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Kiva.Settings.Views
 {
-    /// <summary>
-    /// Interaction logic for WinMMAudioSettings.xaml
-    /// </summary>
     public partial class WinMMAudioSettings : UserControl
     {
-        struct DeviceData
+        private struct DeviceData
         {
-            public uint id;
-            public string name;
+            public uint Id;
+            public string Name;
         }
 
         private KivaSettings settings;
+        private readonly Brush selectBrush = new SolidColorBrush(Color.FromArgb(50, 255, 255, 255));
 
         public KivaSettings Settings
         {
-            get => settings; set
+            get => settings;
+            set
             {
                 settings = value;
                 SetValues();
             }
         }
 
-        SolidColorBrush selectBrush = new SolidColorBrush(Color.FromArgb(50, 255, 255, 255));
-
         public WinMMAudioSettings()
         {
             InitializeComponent();
+            LoadDevices();
+            ClearSelection();
+        }
 
-            var devCount = WinMM.midiOutGetNumDevs();
+        private void LoadDevices()
+        {
+            uint devCount = WinMM.midiOutGetNumDevs();
 
             for (uint i = 0; i < devCount; i++)
             {
-                string name;
-                MIDIOUTCAPS device;
-                WinMM.midiOutGetDevCaps(i, out device, (uint)Marshal.SizeOf(typeof(MIDIOUTCAPS)));
-                name = device.szPname;
-                var item = new Grid()
+                WinMM.midiOutGetDevCaps(i, out MIDIOUTCAPS device, (uint)Marshal.SizeOf<MIDIOUTCAPS>());
+
+                var data = new DeviceData
                 {
-                    Tag = new DeviceData() { id = i, name = name },
+                    Id = i,
+                    Name = device.szPname
                 };
-                item.Children.Add(
-                    new RippleEffectDecorator()
-                    {
-                        Content = new Label
-                        {
-                            FontSize = 14,
-                            HorizontalContentAlignment = HorizontalAlignment.Center,
-                            Content = name
-                        }
-                    }
-                );
-                item.PreviewMouseDown += (s, e) =>
-                {
-                    ClearSelectedDevice();
-                    SelectDevice(devicesList.Children.IndexOf(item));
-                };
+
+                var item = CreateDeviceItem(data, i);
                 devicesList.Children.Add(item);
             }
+        }
 
-            ClearSelectedDevice();
+        private Grid CreateDeviceItem(DeviceData data, int index)
+        {
+            var item = new Grid { Tag = data };
+
+            item.Children.Add(new RippleEffectDecorator
+            {
+                Content = new Label
+                {
+                    Content = data.Name,
+                    FontSize = 14,
+                    HorizontalContentAlignment = HorizontalAlignment.Center
+                }
+            });
+
+            item.PreviewMouseDown += (_, __) => SelectDevice(index);
+
+            return item;
         }
 
         public void SelectDevice(int index)
         {
-            ClearSelectedDevice();
-            ((Grid)devicesList.Children[index]).Background = selectBrush;
-            var tag = (DeviceData)((Grid)devicesList.Children[index]).Tag;
-            settings.General.SelectedMIDIDevice = (int)tag.id;
-            settings.General.SelectedMIDIDeviceName = tag.name;
+            if (index < 0 || index >= devicesList.Children.Count)
+                return;
+
+            ClearSelection();
+
+            var item = (Grid)devicesList.Children[index];
+            item.Background = selectBrush;
+
+            var data = (DeviceData)item.Tag;
+
+            settings.General.SelectedMIDIDevice = (int)data.Id;
+            settings.General.SelectedMIDIDeviceName = data.Name;
         }
 
         public void SetValues()
         {
-            ClearSelectedDevice();
-            int i = 0;
-            bool selected = false;
-            foreach (var b in devicesList.Children.Cast<Grid>())
+            if (settings == null || devicesList.Children.Count == 0)
+                return;
+
+            ClearSelection();
+
+            for (int i = 0; i < devicesList.Children.Count; i++)
             {
-                var tag = (DeviceData)b.Tag;
-                if (tag.name == settings.General.SelectedMIDIDeviceName)
+                var item = (Grid)devicesList.Children[i];
+                var data = (DeviceData)item.Tag;
+
+                if (data.Name == settings.General.SelectedMIDIDeviceName &&
+                    data.Id == settings.General.SelectedMIDIDevice)
                 {
-                    if (settings.General.SelectedMIDIDevice == tag.id)
-                    {
-                        SelectDevice(i);
-                        selected = true;
-                        break;
-                    }
+                    SelectDevice(i);
+                    return;
                 }
-                i++;
             }
-            if (!selected)
-            {
-                SelectDevice(0);
-            }
+
+            SelectDevice(0); // fallback
         }
 
-        public void ClearSelectedDevice()
+        private void ClearSelection()
         {
-            foreach (var b in devicesList.Children.Cast<Grid>()) b.Background = Brushes.Transparent;
+            foreach (Grid item in devicesList.Children)
+                item.Background = Brushes.Transparent;
         }
     }
 }
