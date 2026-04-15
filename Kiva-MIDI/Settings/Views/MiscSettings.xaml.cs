@@ -1,98 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Kiva.Settings.Views
 {
-    /// <summary>
-    /// Interaction logic for MiscSettings.xaml
-    /// </summary>
     public partial class MiscSettings : UserControl
     {
         private KivaSettings settings;
 
         public KivaSettings Settings
         {
-            get => settings; set
+            get => settings;
+            set
             {
                 settings = value;
                 SetValues();
             }
         }
 
-        public MiscSettings()
-        {
-            InitializeComponent();
-        }
+        public MiscSettings() => InitializeComponent();
 
         void SetValues()
         {
-            backgroundColor.Color = settings.General.BackgroundColor;
-            barColor.Color = settings.General.BarColor;
-            hideInfoCard.IsChecked = settings.General.HideInfoCard;
-            windowTopmost.IsChecked = settings.General.MainWindowTopmost;
-            skipLoad.IsChecked = settings.General.SkipLoadSettings;
-            discordRP.IsChecked = settings.General.DiscordRP;
+            var g = settings.General;
 
-            var cp = settings.General.InfoCardParams;
+            backgroundColor.Color = g.BackgroundColor;
+            barColor.Color = g.BarColor;
 
-            timeLabel.IsChecked = (cp & CardParams.Time) > 0;
-            fpsLabel.IsChecked = (cp & CardParams.FPS) > 0;
-            renderedNotesLabel.IsChecked = (cp & CardParams.RenderedNotes) > 0;
+            hideInfoCard.IsChecked = g.HideInfoCard;
+            windowTopmost.IsChecked = g.MainWindowTopmost;
+            skipLoad.IsChecked = g.SkipLoadSettings;
+            discordRP.IsChecked = g.DiscordRP;
+
+            timeLabel.IsChecked = g.InfoCardParams.HasFlag(CardParams.Time);
+            fpsLabel.IsChecked = g.InfoCardParams.HasFlag(CardParams.FPS);
+            renderedNotesLabel.IsChecked = g.InfoCardParams.HasFlag(CardParams.RenderedNotes);
         }
 
         private void BackgroundColor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
         {
             if (IsInitialized)
-                settings.General.BackgroundColor = backgroundColor.Color;
+                settings.General.BackgroundColor = e.NewValue;
         }
 
         private void BarColor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
         {
             if (IsInitialized)
-                settings.General.BarColor = barColor.Color;
+                settings.General.BarColor = e.NewValue;
         }
 
         private void hideInfoCard_CheckToggled(object sender, RoutedPropertyChangedEventArgs<bool> e)
-        {
-            settings.General.HideInfoCard = hideInfoCard.IsChecked;
-        }
+            => settings.General.HideInfoCard = hideInfoCard.IsChecked;
 
         private void windowTopmost_CheckToggled(object sender, RoutedPropertyChangedEventArgs<bool> e)
-        {
-            settings.General.MainWindowTopmost = windowTopmost.IsChecked;
-        }
+            => settings.General.MainWindowTopmost = windowTopmost.IsChecked;
+
+        private void skipLoad_CheckToggled(object sender, RoutedPropertyChangedEventArgs<bool> e)
+            => settings.General.SkipLoadSettings = skipLoad.IsChecked;
+
+        private void discordRP_CheckToggled(object sender, RoutedPropertyChangedEventArgs<bool> e)
+            => settings.General.DiscordRP = discordRP.IsChecked;
 
         private void cardLabel_CheckToggled(object sender, RoutedPropertyChangedEventArgs<bool> e)
         {
-            CardParams cp = 0;
+            var cp = CardParams.None;
 
             if (timeLabel.IsChecked) cp |= CardParams.Time;
             if (fpsLabel.IsChecked) cp |= CardParams.FPS;
             if (renderedNotesLabel.IsChecked) cp |= CardParams.RenderedNotes;
 
             settings.General.InfoCardParams = cp;
-        }
-
-        private void skipLoad_CheckToggled(object sender, RoutedPropertyChangedEventArgs<bool> e)
-        {
-            settings.General.SkipLoadSettings = skipLoad.IsChecked;
-        }
-
-        private void discordRP_CheckToggled(object sender, RoutedPropertyChangedEventArgs<bool> e)
-        {
-            settings.General.DiscordRP = discordRP.IsChecked;
         }
     }
 }
