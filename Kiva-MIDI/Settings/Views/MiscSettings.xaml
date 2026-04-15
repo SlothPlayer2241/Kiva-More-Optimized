@@ -3,50 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Kiva.Settings.Views" xmlns:ui="clr-namespace:Kiva.UI"
-             mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="600">
+             xmlns:ui="clr-namespace:Kiva.UI"
+             mc:Ignorable="d"
+             d:DesignHeight="350"
+             d:DesignWidth="600">
+
     <Grid>
+        <!-- Background -->
         <Grid.Background>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="#FF9B5C" Offset="0"/>
+                <GradientStop Color="#FF9B5C"/>
                 <GradientStop Color="#FF6B9D" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Border Padding="10">
-            <StackPanel>
-                <Label FontSize="16" Foreground="White">Info Card Values</Label>
-                <ui:BetterCheckbox CheckToggled="cardLabel_CheckToggled" x:Name="timeLabel" Text="Time"/>
-                <ui:BetterCheckbox CheckToggled="cardLabel_CheckToggled" x:Name="fpsLabel" Text="FPS"/>
-                <ui:BetterCheckbox CheckToggled="cardLabel_CheckToggled" x:Name="renderedNotesLabel" Text="Rendered Notes"/>
-            </StackPanel>
-        </Border>
-        <Border Grid.Column="1" Padding="10">
-            <StackPanel>
-                <DockPanel>
-                    <Label FontSize="14" HorizontalAlignment="Left" Foreground="White">
-                        Background Color
-                    </Label>
-                    <ui:HexColorPicker ValueChanged="BackgroundColor_ValueChanged" UseAlpha="True" x:Name="backgroundColor" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
-                </DockPanel>
-                <DockPanel>
-                    <Label FontSize="14" HorizontalAlignment="Left" Foreground="White">
-                        Bar Color
-                    </Label>
-                    <ui:HexColorPicker ValueChanged="BarColor_ValueChanged" x:Name="barColor" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
-                </DockPanel>
-                <ui:BetterCheckbox x:Name="hideInfoCard" Text="Hide Info Card" Margin="0,5,0,0" CheckToggled="hideInfoCard_CheckToggled"/>
-                <DockPanel Margin="0,5,0,0" LastChildFill="False">
-                    <ui:BetterCheckbox x:Name="windowTopmost" Text="Main Window Topmost" CheckToggled="windowTopmost_CheckToggled"/>
-                    <ui:InfoIcon Margin="5,0,0,0" Title="Topmost" Text="The Kiva window will always appear above other windows"/>
-                </DockPanel>
-                <ui:BetterCheckbox x:Name="skipLoad" Text="Skip Loader Settings Prompt" Margin="0,5,0,0" CheckToggled="skipLoad_CheckToggled"/>
-                <ui:BetterCheckbox x:Name="discordRP" Text="Discord Rich Presence" Margin="0,5,0,0" CheckToggled="discordRP_CheckToggled"/>
-            </StackPanel>
-        </Border>
+
+        <!-- Left Side -->
+        <StackPanel Margin="10">
+            <Label FontSize="16" Foreground="White" Content="Info Card Values"/>
+
+            <ui:BetterCheckbox x:Name="timeLabel" Text="Time"
+                               CheckToggled="cardLabel_CheckToggled"/>
+
+            <ui:BetterCheckbox x:Name="fpsLabel" Text="FPS"
+                               CheckToggled="cardLabel_CheckToggled"/>
+
+            <ui:BetterCheckbox x:Name="renderedNotesLabel" Text="Rendered Notes"
+                               CheckToggled="cardLabel_CheckToggled"/>
+        </StackPanel>
+
+        <!-- Right Side -->
+        <StackPanel Grid.Column="1" Margin="10">
+
+            <!-- Background Color -->
+            <DockPanel>
+                <Label Foreground="White" Content="Background Color"/>
+                <ui:HexColorPicker x:Name="backgroundColor"
+                                   Margin="5,0,0,0"
+                                   VerticalAlignment="Bottom"
+                                   UseAlpha="True"
+                                   ValueChanged="BackgroundColor_ValueChanged"/>
+            </DockPanel>
+
+            <!-- Bar Color -->
+            <DockPanel Margin="0,5,0,0">
+                <Label Foreground="White" Content="Bar Color"/>
+                <ui:HexColorPicker x:Name="barColor"
+                                   Margin="5,0,0,0"
+                                   VerticalAlignment="Bottom"
+                                   ValueChanged="BarColor_ValueChanged"/>
+            </DockPanel>
+
+            <!-- Toggles -->
+            <ui:BetterCheckbox x:Name="hideInfoCard"
+                               Margin="0,5,0,0"
+                               Text="Hide Info Card"
+                               CheckToggled="hideInfoCard_CheckToggled"/>
+
+            <DockPanel Margin="0,5,0,0">
+                <ui:BetterCheckbox x:Name="windowTopmost"
+                                   Text="Main Window Topmost"
+                                   CheckToggled="windowTopmost_CheckToggled"/>
+
+                <ui:InfoIcon Margin="5,0,0,0"
+                             Title="Topmost"
+                             Text="The Kiva window will always appear above other windows"/>
+            </DockPanel>
+
+            <ui:BetterCheckbox x:Name="skipLoad"
+                               Margin="0,5,0,0"
+                               Text="Skip Loader Settings Prompt"
+                               CheckToggled="skipLoad_CheckToggled"/>
+
+            <ui:BetterCheckbox x:Name="discordRP"
+                               Margin="0,5,0,0"
+                               Text="Discord Rich Presence"
+                               CheckToggled="discordRP_CheckToggled"/>
+        </StackPanel>
+
     </Grid>
 </UserControl>
